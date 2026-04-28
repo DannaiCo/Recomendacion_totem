@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Día del Jazz</title>
+
+    <!-- Fuente FatFrank -->
+    <link rel="stylesheet" href="https://use.typekit.net/vzc7lay.css" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        background-color: #ffffff;
+        font-family: "fatfrank", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      .contenedor {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      video#fondoVideo {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        z-index: 0;
+      }
+
+      .frase {
+        position: absolute;
+        top: 79%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        max-width: 800px;
+        max-height: 550px;
+        text-align: center;
+        font-size: 100px;
+        line-height: 1.4;
+        color: #47c9fb;
+        font-family: "popins", sans-serif;
+        font-weight: 600;
+        opacity: 0;
+        text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.8);
+      }
+
+      .mostrar {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="contenedor">
+      <!-- Fondo en video -->
+      <video id="fondoVideo" autoplay muted loop>
+        <source src="fondo.mp4" type="video/mp4" />
+        Tu navegador no soporta videos en HTML5.
+      </video>
+
+      <!-- Texto dinámico -->
+      <div id="frase" class="frase">Recomendación</div>
+    </div>
+
+    <script>
+      const url =
+        "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiCnxM7-64LIN3PUqy9WFVmvtdQVTSD0iINZC_ay0mJ1_9kavcr25SLyu4xZFgRzMehPbBDwczMPIjgw_cBx991A9vlxthDf2fCJbbc-ImUcaGhURpgLTccf2OIBc0CfNO7vsBZOOArVr2CJ6NK6qa7oglzn9qT_X1mN48USliv7JP-PMXwfXqO3tq2jdsKuHVWOWKzKk_S850zAeTueXV7GsF9ombN3cvzs8EG704nLkl81n2FetuO37kHk_lydLTejwlwpi109vSCKCSHvJq8GA1rbgR_3uDng84S&lib=Mo-xvKz58AIfr778Oor40O6eEHa1C_Htb";
+
+      let frases = [];
+      let index = 0;
+
+      async function fetchData() {
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
+
+          // 👇 Ajusta según cómo viene tu JSON
+          // Si es un array plano, basta con esto:
+          frases = data;
+
+          // Si viene como { "data": [...] }, usa:
+          // frases = data.data;
+
+          if (frases.length > 0) {
+            index = Math.floor(Math.random() * frases.length);
+            showFrase();
+            setInterval(showFrase, 5000);
+          } else {
+            document.getElementById("frase").innerText = "No hay aprobados";
+          }
+        } catch (err) {
+          document.getElementById("frase").innerText = "Error al cargar";
+          console.error(err);
+        }
+      }
+
+      function showFrase() {
+        const fraseDiv = document.getElementById("frase");
+        fraseDiv.innerText = frases[index];
+        fraseDiv.classList.add("mostrar");
+
+        index = (index + 1) % frases.length;
+      }
+
+      fetchData();
+    </script>
+  </body>
+</html>
