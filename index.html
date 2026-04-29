@@ -36,27 +36,27 @@
         object-fit: fill;
         z-index: 0;
       }
-  .frase {
-    position: absolute;
-    top: 79%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    max-width: 800px;
-    max-height: 550px;
-    text-align: center;
-    font-size: 100px;
-    line-height: 1.4;
-    color: #47c9fb;
-    font-family: "Poppins", sans-serif; /* corregido */
-    font-weight: 600;
-    opacity: 0;
-    z-index: 10; /* 👈 IMPORTANTE */
-  }
 
-  .mostrar {
-    opacity: 1;
+      .frase {
+        position: absolute;
+        top: 83%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        max-width: 1500px;
+        max-height: 231px;
+        text-align: center;
+        font-size: 85px;
+        line-height: 1;
+        color: #47c9fb;
+        font-family: "popins", sans-serif;
+        font-weight: 600;
+        opacity: 0;
+        text-shadow: 0px 0px 0px rgba(0, 0, 0, 0.8);
+      }
 
+      .mostrar {
+        opacity: 1;
       }
     </style>
   </head>
@@ -79,39 +79,39 @@
       let frases = [];
       let index = 0;
 
-      function fetchData() {
-  fetch(url)
-    .then(function (res) {
-      return res.json();
-    })
-    .then(function (data) {
-      frases = data.data || data;
+      async function fetchData() {
+        try {
+          const res = await fetch(url);
+          const data = await res.json();
 
-      if (frases.length > 0) {
-        index = Math.floor(Math.random() * frases.length);
-        showFrase();
-        setInterval(showFrase, 5000);
+          // 👇 Ajusta según cómo viene tu JSON
+          // Si es un array plano, basta con esto:
+          frases = data;
+
+          // Si viene como { "data": [...] }, usa:
+          // frases = data.data;
+
+          if (frases.length > 0) {
+            index = Math.floor(Math.random() * frases.length);
+            showFrase();
+            setInterval(showFrase, 5000);
+          } else {
+            document.getElementById("frase").innerText = "No hay aprobados";
+          }
+        } catch (err) {
+          document.getElementById("frase").innerText = "Error al cargar";
+          console.error(err);
+        }
       }
-    })
-    .catch(function (err) {
-      console.log("Error:", err);
-    });
-}
-     function showFrase() {
-  const fraseDiv = document.getElementById("frase");
 
-  // 👇 Esto evita que falle si viene como objeto
-  if (typeof frases[index] === "object") {
-    fraseDiv.innerText = frases[index].mensaje || JSON.stringify(frases[index]);
-  } else {
-    fraseDiv.innerText = frases[index];
-  }
+      function showFrase() {
+        const fraseDiv = document.getElementById("frase");
+        fraseDiv.innerText = frases[index];
+        fraseDiv.classList.add("mostrar");
 
-  fraseDiv.classList.add("mostrar");
+        index = (index + 1) % frases.length;
+      }
 
-  index = (index + 1) % frases.length;
-}
-    
       fetchData();
     </script>
   </body>
