@@ -97,14 +97,21 @@
       console.log("Error:", err);
     });
 }
-      function showFrase() {
-        const fraseDiv = document.getElementById("frase");
-        fraseDiv.innerText = frases[index];
-        fraseDiv.classList.add("mostrar");
+     function showFrase() {
+  const fraseDiv = document.getElementById("frase");
 
-        index = (index + 1) % frases.length;
-      }
+  // 👇 Esto evita que falle si viene como objeto
+  if (typeof frases[index] === "object") {
+    fraseDiv.innerText = frases[index].mensaje || JSON.stringify(frases[index]);
+  } else {
+    fraseDiv.innerText = frases[index];
+  }
 
+  fraseDiv.classList.add("mostrar");
+
+  index = (index + 1) % frases.length;
+}
+    
       fetchData();
     </script>
   </body>
