@@ -72,47 +72,37 @@
       <div id="frase" class="frase">Recomendación</div>
     </div>
 
-    <script>
-      const url =
-        "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiCnxM7-64LIN3PUqy9WFVmvtdQVTSD0iINZC_ay0mJ1_9kavcr25SLyu4xZFgRzMehPbBDwczMPIjgw_cBx991A9vlxthDf2fCJbbc-ImUcaGhURpgLTccf2OIBc0CfNO7vsBZOOArVr2CJ6NK6qa7oglzn9qT_X1mN48USliv7JP-PMXwfXqO3tq2jdsKuHVWOWKzKk_S850zAeTueXV7GsF9ombN3cvzs8EG704nLkl81n2FetuO37kHk_lydLTejwlwpi109vSCKCSHvJq8GA1rbgR_3uDng84S&lib=Mo-xvKz58AIfr778Oor40O6eEHa1C_Htb";
+   <script>
+  // 👇 Frases precargadas (ya no dependes de internet)
+  let frases = [
+    "La vie en rose - Louis Armstrong",
+    "The Girl from Ipanema - Stan Getz",
+    "In the mood - Glenn Miller",
+    "Fly me to the moon - Astrud Gilberto",
+    "Cheek to cheek - Ella Fitzgerald",
+    "Love Me Or Leave Me - Nina Simone",
+    "Dedicated To You - Freddie Hubbard",
+    "What a Wonderful World - Louis Armstrong",
+    "Hit the Road Jack - Ray Charles"
+  ];
 
-      let frases = [];
-      let index = 0;
+  let index = Math.floor(Math.random() * frases.length);
 
-      async function fetchData() {
-        try {
-          const res = await fetch(url);
-          const data = await res.json();
+  function showFrase() {
+    const fraseDiv = document.getElementById("frase");
+    fraseDiv.innerText = frases[index];
+    fraseDiv.classList.add("mostrar");
 
-          // 👇 Ajusta según cómo viene tu JSON
-          // Si es un array plano, basta con esto:
-          frases = data;
+    index = (index + 1) % frases.length;
+  }
 
-          // Si viene como { "data": [...] }, usa:
-          // frases = data.data;
+  function loopFrases() {
+    showFrase();
+    setTimeout(loopFrases, 5000);
+  }
 
-          if (frases.length > 0) {
-            index = Math.floor(Math.random() * frases.length);
-            showFrase();
-            setInterval(showFrase, 5000);
-          } else {
-            document.getElementById("frase").innerText = "No hay aprobados";
-          }
-        } catch (err) {
-          document.getElementById("frase").innerText = "Error al cargar";
-          console.error(err);
-        }
-      }
-
-      function showFrase() {
-        const fraseDiv = document.getElementById("frase");
-        fraseDiv.innerText = frases[index];
-        fraseDiv.classList.add("mostrar");
-
-        index = (index + 1) % frases.length;
-      }
-
-      fetchData();
-    </script>
+  // 👇 Arranca inmediatamente (ya está "precargado")
+  loopFrases();
+</script>
   </body>
 </html>
