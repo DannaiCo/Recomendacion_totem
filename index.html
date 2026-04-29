@@ -79,31 +79,24 @@
       let frases = [];
       let index = 0;
 
-      async function fetchData() {
-        try {
-          const res = await fetch(url);
-          const data = await res.json();
+      function fetchData() {
+  fetch(url)
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (data) {
+      frases = data.data || data;
 
-          // 👇 Ajusta según cómo viene tu JSON
-          // Si es un array plano, basta con esto:
-          frases = data;
-
-          // Si viene como { "data": [...] }, usa:
-          // frases = data.data;
-
-          if (frases.length > 0) {
-            index = Math.floor(Math.random() * frases.length);
-            showFrase();
-            setInterval(showFrase, 5000);
-          } else {
-            document.getElementById("frase").innerText = "No hay aprobados";
-          }
-        } catch (err) {
-          document.getElementById("frase").innerText = "Error al cargar";
-          console.error(err);
-        }
+      if (frases.length > 0) {
+        index = Math.floor(Math.random() * frases.length);
+        showFrase();
+        setInterval(showFrase, 5000);
       }
-
+    })
+    .catch(function (err) {
+      console.log("Error:", err);
+    });
+}
       function showFrase() {
         const fraseDiv = document.getElementById("frase");
         fraseDiv.innerText = frases[index];
